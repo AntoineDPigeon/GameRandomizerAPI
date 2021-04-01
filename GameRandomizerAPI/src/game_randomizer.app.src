@@ -1,0 +1,17 @@
+{application, game_randomizer,
+ [{description, "A game randomizer API"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, {game_randomizer_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    cowboy,
+    mnesia
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.
