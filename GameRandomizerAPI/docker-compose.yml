@@ -1,0 +1,13 @@
+version: '3'
+services:
+
+  erlang:
+    container_name: game-randomizer-erl
+    image: game-randomizer-erl
+    volumes:
+      - $SSH_AUTH_SOCK:$SSH_AUTH_SOCK
+      - .:/app
+    command: tail -F /dev/null
+    user: root
+    ports:
+      - "8084:8084"

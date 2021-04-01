@@ -1,0 +1,29 @@
+# syntax=docker/dockerfile:1.0.0-experimental
+ARG ERLANG_VERSION="23.1.1.0-slim"
+FROM erlang:$ERLANG_VERSION AS dependencies
+
+# Install build deps
+RUN apt-get update -qq && apt-get install --no-install-recommends -y \
+    openssh-client \
+    ca-certificates \
+    git \
+    curl \
+    make \
+    automake \
+    build-essential \
+    g++ \
+    libnl-3-dev \
+    libnl-genl-3-dev \
+    autotools-dev \
+    libtool \
+    subversion \
+    libidn11-dev \
+    linux-libc-dev \
+    libmodpbase64-0 \
+    gnupg \
+    software-properties-common
+
+FROM erlang:$ERLANG_VERSION AS release
+LABEL appname=game-randomizer-dependency
+
+COPY --from=dependencies / /
