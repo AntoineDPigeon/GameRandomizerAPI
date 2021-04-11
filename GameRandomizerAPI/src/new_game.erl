@@ -2,7 +2,7 @@
 
 -include_lib("game_types.hrl").
 
--export([add/1]).
+-export([add/1, delete/1, change/1]).
 
 add(Req) ->
     {ok, GameJson, Req1} = read_body(Req, <<>>),
@@ -16,7 +16,27 @@ add(Req) ->
     Exists = mnesia_tables:game_exists(Game2),
     add_game(Exists, Game2, Req1).
 
+change(Req) ->
+    {ok, GameJson, Req1} = read_body(Req, <<>>),
+    { DecodedGame } = jiffy:decode(GameJson),
+    lager:log(debug, ?MODULE, "Received json -> ~p", [DecodedGame]),
+    Game = utils:get_game(DecodedGame, #games{}),
+    case Game#games.id of
+        undefined ->
+            cowboy_req:reply(400, #{<<"access-control-allow-origin">> => <<"*">>}, <<"Id is necessary.">>, Req1);
+        _ ->
+            mnesia_tables:modify_game(Game),
+            cowboy_req:reply(200, #{<<"access-control-allow-origin">> => <<"*">>}, <<>>, Req1)
+    end.
 
+delete(Req) ->
+    Id = binary_to_integer(cowboy_req:binding(id, Req)),
+    case mnesia_tables:delete_game_by_id(Id) of
+        false ->
+            cowboy_req:reply(404, #{<<"access-control-allow-origin">> => <<"*">>}, <<>>, Req);
+        true ->
+            cowboy_req:reply(200, #{<<"access-control-allow-origin">> => <<"*">>}, <<>>, Req)
+    end.
 
 read_body(Req0, Acc) ->
     case cowboy_req:read_body(Req0) of

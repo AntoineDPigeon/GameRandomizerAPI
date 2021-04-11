@@ -11,9 +11,8 @@ get_game([H|T], Game) ->
     Game2 = get_value(Key, Value, Game),
     get_game(T, Game2).
 
-get_value(<<"id">>, _Id, Game) ->
-    % For now we ignore incoming ID
-    Game;
+get_value(<<"id">>, Id, Game) ->
+    Game#games{id=Id};
 get_value(<<"name">>, Name, Game) ->
     Game#games{name=Name};
 get_value(<<"url">>, Url, Game) ->

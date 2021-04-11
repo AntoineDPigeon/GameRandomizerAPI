@@ -18,7 +18,8 @@ start(_StartType, _StartArgs) ->
     mnesia_tables:init([node()]),
     Dispatch = cowboy_router:compile([         
             {'_', [
-                {"/", game_handler, []}
+                {"/", game_handler, []},
+                {"/:id", game_handler, []}
             ]}     
     ]),
     KeyPath = code:priv_dir(game_randomizer) ++ "/server.key",

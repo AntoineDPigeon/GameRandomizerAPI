@@ -11,17 +11,18 @@
 
 init(Req, State) ->
     Method = cowboy_req:method(Req),
+    lager:log(debug, ?MODULE, "incoming req -> ~p", [Method]),
     Req3 = case Method of
         <<"GET">> ->
             get_all_games(Req);
         <<"POST">> ->
             new_game:add(Req);
+        <<"PUT">> ->
+            new_game:change(Req);
         <<"OPTIONS">> ->
-            cowboy_req:reply(200, 
-                #{<<"content-type">> => <<"application/json">>, <<"access-control-allow-methods">> => <<"GET,OPTIONS,PUT">>, <<"access-control-allow-origin">> => <<"*">>}
-                , <<>>, Req);
+            cowboy_req:reply(200, #{<<"content-type">> => <<"application/json">>, <<"access-control-allow-methods">> => <<"GET,OPTIONS,PUT">>, <<"access-control-allow-origin">> => <<"*">>}, <<>>, Req);
         <<"DELETE">> ->
-            Req
+            new_game:delete(Req)
     end,
     {ok, Req3, State}.
 

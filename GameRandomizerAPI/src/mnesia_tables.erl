@@ -2,7 +2,7 @@
 
 -include_lib("game_types.hrl").
 
--export([init/1, add_game/1, get_games/0, game_exists/1]).
+-export([init/1, add_game/1, get_games/0, game_exists/1, delete_game_by_id/1, modify_game/1]).
 
 init(Nodes) ->
     lager:log(debug, ?MODULE, "Nodes -> ~p", [Nodes]),
@@ -20,6 +20,12 @@ add_game(Game) ->
     end),
     lager:log(debug, ?MODULE, "add_game : ~p", [Result]),
     FinalGame.
+
+modify_game(Game) ->
+    Result = mnesia:transaction(fun() ->
+        mnesia:write(Game)
+    end),
+    lager:log(debug, ?MODULE, "add_game : ~p", [Result]).
 
 game_exists(Game) ->
     Games = get_games(),
@@ -41,3 +47,14 @@ get_games() ->
     lists:foldl(fun(Key, Acc) ->
         lists:append(Acc, mnesia:dirty_read({games, Key}))
     end, [], Keys).
+
+delete_game_by_id(Key) ->
+    Result = mnesia:dirty_read(games, Key),
+    lager:log(debug, ?MODULE, "found -> ~p", [Result]),
+    case Result of
+        [] ->
+            false;
+        _ -> 
+            mnesia:dirty_delete(games, Key),
+            true
+    end.
