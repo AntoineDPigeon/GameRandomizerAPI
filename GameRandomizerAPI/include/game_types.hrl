@@ -1,5 +1,5 @@
 -record(games, {
+    id :: non_neg_integer() | undefined,
     name :: binary() | undefined,
-    id :: non_neg_integer() | undefined
-    % steam_url :: binary()
+    url :: binary() | undefined
 }).

@@ -6,9 +6,9 @@ RUN apt-get update -qq && apt-get install --no-install-recommends -y vim
 
 RUN set -ex ;\
     if [ ${root:-0} -ne 0 ] && [ ${root:-0} -ne 0 ]; then \
-        mkdir /home/cloudshell-user/.ssh; \
-        ssh-keyscan github.com >> /home/cloudshell-user/.ssh/known_hosts; \
-        chown -R root:root /home/cloudshell-user/.ssh; \
+        mkdir /home/apigeon/.ssh; \
+        ssh-keyscan github.com >> /home/apigeon/.ssh/known_hosts; \
+        chown -R root:root /home/apigeon/.ssh; \
     fi;
 
 WORKDIR /app

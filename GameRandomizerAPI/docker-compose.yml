@@ -1,13 +1,12 @@
 version: '3'
 services:
-
   erlang:
     container_name: game-randomizer-erl
-    image: game-randomizer-erl
+    image: game-randomizer-dev
     volumes:
       - $SSH_AUTH_SOCK:$SSH_AUTH_SOCK
-      - .:/app
+      - /home/apigeon/workspace/GameRandomizerAPI/GameRandomizerAPI:/app
     command: tail -F /dev/null
     user: root
     ports:
-      - "8084:8084"
+      - "8089:8089"
